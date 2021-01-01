@@ -1,0 +1,29 @@
+makeCacheMatrix <- function(x = matrix()) {
+## Esta función crea una matriz de objeto "especial" que hace que el caché sea inverso
+
+makeCacheMatrix <- function(x = matrix()) { ## Se define el argumento con el modelo por defecto de la matriz
+    inv <- NULL                             ## inv se inicializa en null
+    set <- function(y) {                    ## Se define la función set para asignar un nuevo
+        x <<- y                             ## valor en el entorno de la herencia.
+        inv <<- NULL                        ## Si hay una nueva matriz entonces inv será null
+    }
+    get <- function() x                     ## Se deine la función get que retornará el argumento de la matriz
+
+    setinverse <- function(inverse) inv <<- inverse  ## Asigna el valot de inv en el entorno de herencia
+    getinverse <- function() inv                     ## Obtiene el valor de inv al ser llamado
+    list(set = set, get = get, setinverse = setinverse, getinverse = getinverse)  ## Aquí se tiene un orden de referencia
+                                                                                  ## A  la función con el operador $
+}
+
+cacheSolve <- function(x, ...) {
+        ## Regresa una matriz que es inversa de x 
+    inv <- x$getinverse()
+    if(!is.null(inv)) {
+        message("Obteniendo datos del caché")
+        return(inv)
+    }
+    data <- x$get()
+    inv <- solve(data, ...)
+    x$setinverse(inv)
+    inv
+}
